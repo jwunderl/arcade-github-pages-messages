@@ -55,6 +55,11 @@
         // Messages from parentFrame.sendMessage(...) arrive as UTF-8 bytes.
         var text = bytesToString(msg.data).trim();
 
+        // channels here must match channels defined makecode side;
+        // if you need more structured data, arcade has support for JSON.parse(text) / JSON.stringify(object)
+        // for passing things back and forth, but that's only going to be supported in javascript directly.
+        // e.g. to make sure things match, you could send the color set defined at the top of this page to the game
+        // with sendToGame(JSON.stringify(COLORS)), and use JSON.parse(message) on the makecode side handler to convert it back.
         if (msg.channel === "location") {
             setTheme(text);
         } else if (msg.channel === "opentwitch") {
@@ -65,10 +70,6 @@
     function setTheme(location) {
         var key = (location || "default").toLowerCase();
         var color = COLORS[key] || COLORS.default;
-
-        // Page color.
-        document.body.style.backgroundColor = color;
-        document.documentElement.style.setProperty("--page-color", color);
 
         // Simulator shell color.
         setSimulatorColor("background-color", color);
