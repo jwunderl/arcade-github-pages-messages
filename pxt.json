@@ -8,7 +8,10 @@
     "files": [
         "README.md",
         "main.blocks",
-        "main.ts"
+        "main.ts",
+        "tilemap.g.jres",
+        "tilemap.g.ts",
+        "messageposting.ts"
     ],
     "testFiles": [
         "test.ts"
@@ -21,5 +24,5 @@
     "supportedTargets": [
         "arcade"
     ],
-    "preferredEditor": "blocksprj"
+    "preferredEditor": "tsprj"
 }
