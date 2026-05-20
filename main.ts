@@ -1,9 +1,34 @@
+controller.A.onEvent(ControllerButtonEvent.Pressed, function () {
+    if (myPlayer.overlapsWith(twitchTarget) && game.ask("Do you want to watch our twitch?")) {
+        parentFrame.sendMessage("opentwitch", "msmakecode")
+    }
+})
 parentFrame.onReceiveMessage("userinput", function (message) {
-    mySprite.sayText(message)
+    myPlayer.sayText(message)
 })
 let currentlyOn: Image = null
-let mySprite: Sprite = null
-mySprite = sprites.create(img`
+let myPlayer: Sprite = null
+let twitchTarget: Sprite = null
+tiles.setCurrentTilemap(tilemap`level1`)
+twitchTarget = sprites.create(img`
+    . . . b b b b b b b b b . . . . 
+    . . b 1 d d d d d d d 1 b . . . 
+    . b 1 1 1 1 1 1 1 1 1 1 1 b . . 
+    . b d b c c c c c c c b d b . . 
+    . b d c 6 6 6 6 6 6 6 c d b . . 
+    . b d c 6 d 6 6 6 6 6 c d b . . 
+    . b d c 6 6 6 6 6 6 6 c d b . . 
+    . b d c 6 6 6 6 6 6 6 c d b . . 
+    . b d c 6 6 6 6 6 6 6 c d b . . 
+    . b d c c c c c c c c c d b . . 
+    . c b b b b b b b b b b b c . . 
+    c b c c c c c c c c c c c b c . 
+    c 1 d d d d d d d d d d d 1 c . 
+    c 1 d 1 1 d 1 1 d 1 1 d 1 1 c . 
+    c b b b b b b b b b b b b b c . 
+    c c c c c c c c c c c c c c c . 
+    `, SpriteKind.Player)
+myPlayer = sprites.create(img`
     . . . . . . . . . . . . . . . . 
     . . . . . . . . . . . . . . . . 
     . . . . . . . . . b 5 5 b . . . 
@@ -21,10 +46,11 @@ mySprite = sprites.create(img`
     . . c b d d d d d 5 5 5 b b . . 
     . . . c c c c c c c c b b . . . 
     `, SpriteKind.Player)
-controller.moveSprite(mySprite)
-tiles.setCurrentTilemap(tilemap`level1`)
+myPlayer.setStayInScreen(true)
+tiles.placeOnTile(twitchTarget, tiles.getTileLocation(9, 6))
+controller.moveSprite(myPlayer)
 forever(function () {
-    currentlyOn = tiles.tileImageAtLocation(mySprite.tilemapLocation())
+    currentlyOn = tiles.tileImageAtLocation(myPlayer.tilemapLocation())
     if (currentlyOn.equals(sprites.castle.tileGrass2)) {
         parentFrame.sendMessage("location", "grass")
     } else if (currentlyOn.equals(sprites.castle.tileDarkGrass2)) {
