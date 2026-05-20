@@ -1,5 +1,9 @@
+parentFrame.onReceiveMessage("userinput", function (message) {
+    mySprite.sayText(message)
+})
 let currentlyOn: Image = null
-let mySprite = sprites.create(img`
+let mySprite: Sprite = null
+mySprite = sprites.create(img`
     . . . . . . . . . . . . . . . . 
     . . . . . . . . . . . . . . . . 
     . . . . . . . . . b 5 5 b . . . 
@@ -22,12 +26,12 @@ tiles.setCurrentTilemap(tilemap`level1`)
 forever(function () {
     currentlyOn = tiles.tileImageAtLocation(mySprite.tilemapLocation())
     if (currentlyOn.equals(sprites.castle.tileGrass2)) {
-    	
+        parentFrame.sendMessage("location", "grass")
     } else if (currentlyOn.equals(sprites.castle.tileDarkGrass2)) {
-    	
+        parentFrame.sendMessage("location", "dark grass")
     } else if (currentlyOn.equals(sprites.dungeon.darkGroundCenter)) {
-    	
+        parentFrame.sendMessage("location", "dirt")
     } else if (currentlyOn.equals(sprites.dungeon.floorLight0)) {
-    	
+        parentFrame.sendMessage("location", "tile")
     }
 })
