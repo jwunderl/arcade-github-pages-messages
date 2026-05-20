@@ -9,7 +9,6 @@
  * 
  * To register a constrol simmessages, use addSimMessageHandler
  */
-
 (function () {
     var COLORS = {
         "grass": "#3aa657",
@@ -37,7 +36,7 @@
         document.body.classList.add("custom-messaging-page");
         addStyles();
         addControls();
-        setBackground("default");
+        setTheme("default");
         updateReadyState();
     }
 
@@ -57,10 +56,40 @@
         var text = bytesToString(msg.data).trim();
 
         if (msg.channel === "location") {
-            setBackground(text);
+            setTheme(text);
         } else if (msg.channel === "opentwitch") {
             openTwitch(text);
         }
+    }
+
+    function setTheme(location) {
+        var key = (location || "default").toLowerCase();
+        var color = COLORS[key] || COLORS.default;
+
+        // Page color.
+        document.body.style.backgroundColor = color;
+        document.documentElement.style.setProperty("--page-color", color);
+
+        // Simulator shell color.
+        setSimulatorColor("background-color", color);
+        setSimulatorColor("button-stroke", color);
+    }
+
+    function setSimulatorColor(part, color) {
+        // type ThemePart =
+        //     | "background-color"
+        //     | "button-stroke"
+        //     | "text-color"
+        //     | "button-fill"
+        //     | "dpad-fill";
+        var frame = document.getElementById("simframe");
+        if (!frame || !frame.contentWindow) return;
+
+        frame.contentWindow.postMessage({
+            type: "setsimthemecolor",
+            part: part,
+            color: color
+        }, "*");
     }
 
     function addControls() {
@@ -123,14 +152,6 @@
         }, "*");
 
         return true;
-    }
-
-    function setBackground(location) {
-        var key = (location || "default").toLowerCase();
-        var color = COLORS[key] || COLORS.default;
-
-        document.body.style.backgroundColor = color;
-        document.documentElement.style.setProperty("--page-color", color);
     }
 
     function openTwitch(rawChannel) {
